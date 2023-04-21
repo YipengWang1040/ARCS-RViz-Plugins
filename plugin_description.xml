@@ -1,0 +1,10 @@
+<library path="lib/libarcs_rviz_plugins">
+  <class name="libarcs_rviz_plugins/PointCloud2Normal"
+         type="rviz::PointCloud2NormalDisplay"
+         base_class_type="rviz::Display">
+    <description>
+       Displays a point cloud from a sensor_msgs::PointCloud2 message as points in the world, drawn as points, billboards, or cubes. If the point cloud has normal field, also draws the normals.
+    </description>
+  </class>
+
+</library>
