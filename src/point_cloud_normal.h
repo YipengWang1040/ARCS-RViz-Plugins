@@ -49,11 +49,8 @@
 #include <sensor_msgs/PointCloud.h>
 #include <sensor_msgs/PointCloud2.h>
 
-#include "rviz/default_plugin/point_cloud_transformer.h"
-#include "rviz/properties/color_property.h"
-#include "rviz/ogre_helpers/point_cloud.h"
-#include <rviz/ogre_helpers/arrow.h>
-#include "pix_arrow.h"
+#include <OgreSceneNode.h>
+#include <OgreSceneManager.h>
 #endif
 
 namespace rviz {
@@ -63,9 +60,9 @@ class DisplayContext;
 class EnumProperty;
 class FloatProperty;
 class IntProperty;
-struct IndexAndMessage;
-class PointCloudTransformer;
-typedef boost::shared_ptr<PointCloudTransformer> PointCloudTransformerPtr;
+class ColorProperty;
+class Arrow2;
+class PixArrow;
 
 typedef std::vector<std::string> V_string;
 
@@ -117,7 +114,7 @@ class PointCloudNormal : public QObject {
   void processMessage(const sensor_msgs::PointCloud2ConstPtr& cloud);
   void updateStatus();
 
-  void allocateArrowVector(std::vector<rviz::Arrow*>& arrow_vect, size_t num);
+  void allocateArrowVector(std::vector<rviz::Arrow2*>& arrow_vect, size_t num);
   void allocatePixArrowVector(std::vector<rviz::PixArrow*>& pix_arrow_vect, size_t num);
   void destroyArrowChain();
   void destroyPixArrowChain();
@@ -125,7 +122,7 @@ class PointCloudNormal : public QObject {
   void pixArrow2Arrow();
   void arrow2PixArrow();
 
-  std::vector<std::vector<rviz::Arrow*> > arrow_chain_;
+  std::vector<std::vector<rviz::Arrow2*> > arrow_chain_;
   std::vector<std::vector<rviz::PixArrow*> > pix_arrow_chain_;
   std::vector<sensor_msgs::PointCloud2ConstPtr> cloud_chain_;
 

@@ -42,15 +42,17 @@
 #include <rviz/display.h>
 #include <rviz/display_context.h>
 #include <rviz/frame_manager.h>
-#include <rviz/ogre_helpers/arrow.h>
 #include <rviz/properties/bool_property.h>
 #include <rviz/properties/enum_property.h>
 #include <rviz/properties/float_property.h>
 #include <rviz/properties/int_property.h>
 #include <rviz/properties/vector_property.h>
+#include <rviz/properties/color_property.h>
 #include <rviz/uniform_string_stream.h>
 #include <rviz/validate_floats.h>
 
+#include "arrow.h"
+#include "pix_arrow.h"
 #include "point_cloud_normal.h"
 
 namespace rviz {
@@ -114,7 +116,7 @@ void PointCloudNormal::updateBufferLength() {
   if (new_buffer_length == arrow_chain_.size()) return;
 
   // create new containers
-  std::vector<std::vector<rviz::Arrow*> > arrow_chain(new_buffer_length);
+  std::vector<std::vector<rviz::Arrow2*> > arrow_chain(new_buffer_length);
   std::vector<std::vector<rviz::PixArrow*> > pix_arrow_chain(new_buffer_length);
   std::vector<sensor_msgs::PointCloud2ConstPtr> cloud_chain(new_buffer_length);
 
@@ -296,10 +298,10 @@ void PointCloudNormal::reset() {
   cloud_chain_.resize(buffer_length);
 }
 
-void PointCloudNormal::allocateArrowVector(std::vector<rviz::Arrow*>& arrow_vect, size_t num) {
+void PointCloudNormal::allocateArrowVector(std::vector<rviz::Arrow2*>& arrow_vect, size_t num) {
   if (num > arrow_vect.size()) {
     for (size_t i = arrow_vect.size(); i < num; ++i) {
-      rviz::Arrow* arrow = new rviz::Arrow(context_->getSceneManager(), scene_node_);
+      rviz::Arrow2* arrow = new rviz::Arrow2(context_->getSceneManager(), scene_node_);
       arrow_vect.push_back(arrow);
     }
   } else if (num < arrow_vect.size()) {

@@ -29,6 +29,10 @@ set(SRC_FILES
   src/point_cloud_normal.cpp
   src/pix_arrow.h
   src/pix_arrow.cpp
+  src/arrow.h
+  src/arrow.cpp
+  src/shape.h
+  src/shape.cpp
 )
 
 ## An rviz plugin is just a shared library, so here we declare the
