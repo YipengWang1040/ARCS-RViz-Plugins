@@ -111,7 +111,6 @@ PointCloudNormal::~PointCloudNormal() {
 }
 
 void PointCloudNormal::updateBufferLength() {
-  ROS_ERROR("update buffer length");
   int new_buffer_length = buffer_length_property_->getInt();
   if (new_buffer_length == arrow_chain_.size()) return;
 
@@ -123,7 +122,6 @@ void PointCloudNormal::updateBufferLength() {
   if (new_buffer_length > arrow_chain_.size()) {
     size_t offset = new_buffer_length - arrow_chain_.size();
     for (size_t i = 0; i < arrow_chain_.size(); ++i) {
-      ROS_ERROR("%ld, %ld", i + offset, (i + buffer_index_) % arrow_chain_.size());
       arrow_chain[i + offset].swap(arrow_chain_[(i + buffer_index_) % arrow_chain_.size()]);
       pix_arrow_chain[i + offset].swap(pix_arrow_chain_[(i + buffer_index_) % arrow_chain_.size()]);
       cloud_chain[i + offset].swap(cloud_chain_[(i + buffer_index_) % arrow_chain_.size()]);
@@ -145,7 +143,6 @@ void PointCloudNormal::updateBufferLength() {
   arrow_chain_.swap(arrow_chain);
   pix_arrow_chain_.swap(pix_arrow_chain);
   cloud_chain_.swap(cloud_chain);
-  ROS_ERROR("test: %ld", arrow_chain_.size());
 
   context_->queueRender();
 }
@@ -200,7 +197,6 @@ void PointCloudNormal::pixArrow2Arrow() {
 
 void PointCloudNormal::updateStyle() {
   PointCloudNormal::NormalMode mode = (PointCloudNormal::NormalMode)style_property_->getOptionInt();
-  ROS_ERROR("Mode changed to %d", mode);
   if (mode == current_mode_) return;
 
   if (mode == PointCloudNormal::NM_ARROW) {
@@ -319,7 +315,6 @@ void PointCloudNormal::allocatePixArrowVector(std::vector<rviz::PixArrow*>& pix_
 
 void PointCloudNormal::destroyArrowChain() {
   for (size_t i = 0; i < arrow_chain_.size(); ++i) {
-    ROS_ERROR("Destroying arrow chain %ld", i);
     allocateArrowVector(arrow_chain_[i], 0);
   }
   arrow_chain_.resize(0);
@@ -391,7 +386,7 @@ void PointCloudNormal::processMessage(const sensor_msgs::PointCloud2ConstPtr& cl
       float normal_z = *reinterpret_cast<const float*>(ptr + normal_zoff);
 
       Ogre::Vector3 xpos = transform * Ogre::Vector3(x, y, z);
-      Ogre::Vector3 xdir(normal_x, normal_y, normal_z);
+      Ogre::Vector3 xdir = orientation * Ogre::Vector3(normal_x, normal_y, normal_z);
       arrow_vect[i]->setColor(color);
       arrow_vect[i]->set(shaft_length, shaft_diameter, head_length, head_diameter);
       arrow_vect[i]->setPosition(xpos);
@@ -413,7 +408,7 @@ void PointCloudNormal::processMessage(const sensor_msgs::PointCloud2ConstPtr& cl
       float normal_z = *reinterpret_cast<const float*>(ptr + normal_zoff);
 
       Ogre::Vector3 xpos = transform * Ogre::Vector3(x, y, z);
-      Ogre::Vector3 xdir(normal_x, normal_y, normal_z);
+      Ogre::Vector3 xdir = orientation * Ogre::Vector3(normal_x, normal_y, normal_z);
       pix_arrow_vect[i]->set(shaft_length, head_length);
       pix_arrow_vect[i]->setColor(color);
       pix_arrow_vect[i]->setPosition(xpos);
