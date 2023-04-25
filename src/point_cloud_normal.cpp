@@ -155,11 +155,6 @@ void PointCloudNormal::arrow2PixArrow() {
 
   float head_length = pix_arrow_head_length_property_->getFloat();
   float shaft_length = pix_arrow_shaft_length_property_->getFloat();
-  Ogre::Vector3 start(0, 0, 0);
-  Ogre::Vector3 end(0, shaft_length, 0);
-  // 50 degrees arrow head, 25 degrees each side. sin(25deg)=0.4226, cos(25deg)=0.9063
-  Ogre::Vector3 left(-0.4226 * head_length, shaft_length - 0.9063 * head_length, 0);
-  Ogre::Vector3 right(0.4226 * head_length, shaft_length - 0.9063 * head_length, 0);
 
   QColor color = arrow_color_property_->getColor();
   float alpha = alpha_property_->getFloat();
@@ -170,7 +165,7 @@ void PointCloudNormal::arrow2PixArrow() {
     auto& pix_arrow_vect = pix_arrow_chain_[i];
     allocatePixArrowVector(pix_arrow_vect, arrow_vect.size());
     for (size_t j = 0; j < arrow_vect.size(); ++j) {
-      pix_arrow_vect[j]->setPoints(start, end, left, right);
+      pix_arrow_vect[j]->set(shaft_length, head_length);
       pix_arrow_vect[j]->setPosition(arrow_vect[j]->getPosition());
       pix_arrow_vect[j]->setOrientation(arrow_vect[j]->getOrientation());
       pix_arrow_vect[j]->setColor(color.redF(), color.greenF(), color.blueF(), alpha);
@@ -250,15 +245,11 @@ void PointCloudNormal::updateArrowGeometry() {
 void PointCloudNormal::updatePixArrowGeometry() {
   float head_length = pix_arrow_head_length_property_->getFloat();
   float shaft_length = pix_arrow_shaft_length_property_->getFloat();
-  Ogre::Vector3 start(0, 0, 0);
-  Ogre::Vector3 end(0, shaft_length, 0);
-  // 50 degrees arrow head, 25 degrees each side. sin(25deg)=0.4226, cos(25deg)=0.9063
-  Ogre::Vector3 left(-0.4226 * head_length, shaft_length - 0.9063 * head_length, 0);
-  Ogre::Vector3 right(0.4226 * head_length, shaft_length - 0.9063 * head_length, 0);
+
   for (size_t i = 0; i < pix_arrow_chain_.size(); ++i) {
     auto& pix_arrow_vect = pix_arrow_chain_[i];
     for (size_t j = 0; j < pix_arrow_vect.size(); ++j) {
-      pix_arrow_vect[j]->setPoints(start, end, left, right);
+      pix_arrow_vect[j]->set(shaft_length, head_length);
     }
   }
   context_->queueRender();
@@ -409,11 +400,6 @@ void PointCloudNormal::processMessage(const sensor_msgs::PointCloud2ConstPtr& cl
   } else if (mode == NM_2D_ARROW) {
     float head_length = pix_arrow_head_length_property_->getFloat();
     float shaft_length = pix_arrow_shaft_length_property_->getFloat();
-    Ogre::Vector3 start(0, 0, 0);
-    Ogre::Vector3 end(0, shaft_length, 0);
-    // 50 degrees arrow head, 25 degrees each side. sin(25deg)=0.4226, cos(25deg)=0.9063
-    Ogre::Vector3 left(-0.4226 * head_length, shaft_length - 0.9063 * head_length, 0);
-    Ogre::Vector3 right(0.4226 * head_length, shaft_length - 0.9063 * head_length, 0);
 
     auto& pix_arrow_vect = pix_arrow_chain_[buffer_index_];
     allocatePixArrowVector(pix_arrow_vect, num_points);
@@ -428,7 +414,7 @@ void PointCloudNormal::processMessage(const sensor_msgs::PointCloud2ConstPtr& cl
 
       Ogre::Vector3 xpos = transform * Ogre::Vector3(x, y, z);
       Ogre::Vector3 xdir(normal_x, normal_y, normal_z);
-      pix_arrow_vect[i]->setPoints(start, end, left, right);
+      pix_arrow_vect[i]->set(shaft_length, head_length);
       pix_arrow_vect[i]->setColor(color);
       pix_arrow_vect[i]->setPosition(xpos);
       // pix_arrow_vect[i]->setOrientation(Ogre::Vector3::NEGATIVE_UNIT_Y.getRotationTo(xdir));

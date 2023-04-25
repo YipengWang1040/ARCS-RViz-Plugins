@@ -71,7 +71,13 @@ PixArrow::~PixArrow() {
   Ogre::MaterialManager::getSingleton().remove(manual_object_material_->getName());
 }
 
-void PixArrow::setPoints(Ogre::Vector3 start, Ogre::Vector3 end, Ogre::Vector3 left, Ogre::Vector3 right) {
+void PixArrow::set(float shaft_length, float head_length) {
+  Ogre::Vector3 start(0, 0, 0);
+  Ogre::Vector3 end(0, shaft_length, 0);
+  // 50 degrees arrow head, 25 degrees each side. sin(25deg)=0.4226, cos(25deg)=0.9063
+  Ogre::Vector3 left(-0.4226 * head_length, shaft_length - 0.9063 * head_length, 0);
+  Ogre::Vector3 right(0.4226 * head_length, shaft_length - 0.9063 * head_length, 0);
+
   manual_object_->clear();
   manual_object_->begin(manual_object_material_->getName(), Ogre::RenderOperation::OT_LINE_LIST);
   manual_object_->position(start);

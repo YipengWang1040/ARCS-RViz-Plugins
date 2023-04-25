@@ -55,13 +55,9 @@ class PixArrow : public Object {
   ~PixArrow() override;
 
   /**
-   * \brief Set the start, end and arrow points of the arrow.
-   * @param start The start point.
-   * @param end The end point.
-   * @param left The left end of the arrow head.
-   * @param right The right end of the arrow head.
+   * \brief Set the shaft length and head length of the arrow
    */
-  void setPoints(Ogre::Vector3 start, Ogre::Vector3 end, Ogre::Vector3 left, Ogre::Vector3 right);
+  void set(float shaft_length, float head_length);
 
   void setVisible(bool visible);
 
